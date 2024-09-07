@@ -11,7 +11,7 @@ const app = express();
 const PORT = 5000;
 const allowedOrigins = [
   'http://localhost:3000',  // Localhost for development
-  'https://gilded-meringue-c09c41.netlify.app/',  // Example of production URL
+  'https://radiant-bonbon-e7bf35.netlify.app/',  // Example of production URL
 ];
 
 app.use(cors({
