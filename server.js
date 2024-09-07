@@ -14,6 +14,17 @@ const allowedOrigins = [
   'https://gilded-meringue-c09c41.netlify.app/',  // Example of production URL
 ];
 
+app.use(cors({
+    origin: function (origin, callback) {
+      // Check if the incoming origin is in the allowed list or if it's undefined (undefined for same-origin)
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    }
+  }));
+
 const server = http.createServer(app);
 const io = socketIO(server, {
     cors: {
