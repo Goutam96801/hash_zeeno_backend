@@ -10,6 +10,22 @@ const socketIO = require('socket.io');
 const app = express();
 const PORT = 5000;
 
+const allowedOrigins = [
+    'http://localhost:3000',  // Localhost for development
+    'https://66dc13cf90eba49ed5bc67ac--gilded-meringue-c09c41.netlify.app',  // Example of production URL
+  ];
+
+  app.use(cors({
+    origin: function (origin, callback) {
+      // Check if the incoming origin is in the allowed list or if it's undefined (undefined for same-origin)
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    }
+  }));
+  
 const server = http.createServer(app);
 const io = socketIO(server, {
     cors: {
@@ -30,7 +46,6 @@ io.on('connection', (socket) => {
 
 
 app.use(express.json());
-app.use(cors());
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URL, {
