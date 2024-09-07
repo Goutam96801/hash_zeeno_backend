@@ -1,5 +1,7 @@
-import mongoose, { Schema } from "mongoose";
-const userSchema = mongoose.Schema({
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+
+const userSchema = new Schema({
     mobileNumber: {
         type: String,
         required: true,
@@ -29,15 +31,14 @@ const userSchema = mongoose.Schema({
     age: {
         type: Number
     },
-    gender:{
-        type:String
+    gender: {
+        type: String
     }
 },
-    {
-        timestamps: {
-            createdAt: 'createdAt'
-        }
+{
+    timestamps: {
+        createdAt: 'createdAt'
     }
-)
+});
 
-export default mongoose.model("users", userSchema);
+module.exports = mongoose.model("users", userSchema);
