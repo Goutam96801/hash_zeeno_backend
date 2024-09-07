@@ -13,7 +13,7 @@ const PORT = 5000;
 const server = http.createServer(app);
 const io = socketIO(server, {
     cors: {
-        origin: "http://localhost:3000", // Your frontend's address
+        origin: "https://66dc13cf90eba49ed5bc67ac--gilded-meringue-c09c41.netlify.app/", // Your frontend's address
         methods: ["GET", "POST"],
         allowedHeaders: ["Content-Type"],
         credentials: true
