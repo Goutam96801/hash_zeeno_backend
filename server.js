@@ -11,7 +11,7 @@ const app = express();
 const PORT = 5000;
 const allowedOrigins = [
   'http://localhost:3000',  // Localhost for development
-  'https://radiant-bonbon-e7bf35.netlify.app/',  // Example of production URL
+  'https://hash-zeeno-frontend-website.vercel.app/',  // Example of production URL
 ];
 
 app.use(cors({
