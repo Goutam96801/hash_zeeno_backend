@@ -10,11 +10,24 @@ const socketIO = require('socket.io');
 const app = express();
 const PORT = 5000;
 
-// Create HTTP server and initialize Socket.IO
 const server = http.createServer(app);
-const io = socketIO(server);
+const io = socketIO(server, {
+    cors: {
+        origin: "http://localhost:3000", // Your frontend's address
+        methods: ["GET", "POST"],
+        allowedHeaders: ["Content-Type"],
+        credentials: true
+    }
+});
 
-io.use(cors());
+io.on('connection', (socket) => {
+    console.log('A user connected');
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected');
+    });
+});
+
 
 app.use(express.json());
 app.use(cors());
@@ -186,6 +199,7 @@ app.post('/triggerSOS', async (req, res) => {
                 message: 'User is in danger!',
             });
             res.status(200).send('SOS alert sent');
+            console.log('SOS alert sent')
         } else {
             res.status(404).send('User not found');
         }
