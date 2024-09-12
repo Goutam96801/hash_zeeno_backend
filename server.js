@@ -10,19 +10,9 @@ const socketIO = require('socket.io');
 const app = express();
 const PORT = 5000;
 const allowedOrigins = [
-  'https://hash-zeeno-frontend.vercel.app'
+  'https://hash-zeeno-frontend.vercel.app',
+  'http://localhost:3000'
 ];
-
-app.use(cors({
-    origin: function (origin, callback) {
-      // Check if the incoming origin is in the allowed list or if it's undefined (undefined for same-origin)
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    }
-  }));
 
 const server = http.createServer(app);
 const io = socketIO(server, {
@@ -32,6 +22,18 @@ const io = socketIO(server, {
       credentials: true,
     }
   });
+  app.use(cors({
+    origin: function (origin, callback) {
+      // Check if the incoming origin is in the allowed list or if it's undefined (undefined for same-origin)
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: ['GET', 'POST'],
+  credentials: true,
+  }));
 
 io.use((socket, next) => {
     socket.handshake.headers['Access-Control-Allow-Origin'] = 'https://hash-zeeno-frontend.vercel.app';
