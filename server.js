@@ -10,8 +10,7 @@ const socketIO = require('socket.io');
 const app = express();
 const PORT = 5000;
 const allowedOrigins = [
-  'http://localhost:3000',  // Localhost for development
-  'https://hash-zeeno-frontend-website.vercel.app/',  // Example of production URL
+  'http://localhost:3000'
 ];
 
 app.use(cors({
