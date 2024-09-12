@@ -5,7 +5,7 @@ require('dotenv').config();
 const twilio = require('twilio');
 const UserSchema = require('./UserSchema');
 const http = require('http');
-const socketIO = require('socket.io');
+const { Server } = require('socket.io');
 
 const app = express();
 const PORT = 5000;
@@ -14,35 +14,35 @@ const allowedOrigins = [
   'http://localhost:3000'
 ];
 
+app.use(cors({
+    origin: allowedOrigins,
+    methods: ['GET', 'POST'],
+    credentials: true,
+  }));
+
+  app.get('/', (req, res) => {
+    res.send('Socket.IO server is running.');
+  });
+
 const server = http.createServer(app);
-const io = socketIO(server, {
+const io = new Server(server, {
     cors: {
       origin: allowedOrigins,
       methods: ['GET', 'POST'],
       credentials: true,
-    }
-  });
-  app.use(cors({
-    origin: function (origin, callback) {
-      // Check if the incoming origin is in the allowed list or if it's undefined (undefined for same-origin)
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
     },
-    methods: ['GET', 'POST'],
-  credentials: true,
-  }));
-
-io.use((socket, next) => {
-    socket.handshake.headers['Access-Control-Allow-Origin'] = 'https://hash-zeeno-frontend.vercel.app';
-    next();
+    transports: ['websocket', 'polling'], // WebSocket with fallback to polling
   });
   
 
 io.on('connection', (socket) => {
     console.log('A user connected');
+
+    socket.on('message', (data) => {
+        console.log('Received message:', data);
+        // Broadcast message to all connected clients
+        io.emit('message', data);
+      });
 
     socket.on('disconnect', () => {
         console.log('User disconnected');
