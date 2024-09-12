@@ -33,6 +33,12 @@ const io = socketIO(server, {
     }
   });
 
+io.use((socket, next) => {
+    socket.handshake.headers['Access-Control-Allow-Origin'] = 'https://hash-zeeno-frontend.vercel.app';
+    next();
+  });
+  
+
 io.on('connection', (socket) => {
     console.log('A user connected');
 
@@ -43,7 +49,6 @@ io.on('connection', (socket) => {
 
 
 app.use(express.json());
-app.use(cors());
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URL, {
