@@ -9,29 +9,16 @@ const { Server } = require('socket.io');
 
 const app = express();
 const PORT = 5000;
-const allowedOrigins = [
-  'https://hash-zeeno-frontend.vercel.app',
-  'http://localhost:3000'
-];
-
-app.use(cors({
-    origin: allowedOrigins,
-    methods: ['GET', 'POST'],
-    credentials: true,
-  }));
-
-  app.get('/', (req, res) => {
-    res.send('Socket.IO server is running.');
-  });
 
 const server = http.createServer(app);
-const io = new Server(server, {
+const io = require('socket.io')(server, {
+    pingTimeout: 60000,
     cors: {
-      origin: allowedOrigins,
-      methods: ['GET', 'POST'],
+      origin: ["https://hash-zeeno-frontend.vercel.app", "http://localhost:3000"],
+      methods: ["GET", "POST"],
       credentials: true,
     },
-    transports: ['websocket', 'polling'], // WebSocket with fallback to polling
+    transports: ['polling'], // Allow WebSocket transport
   });
   
 
@@ -61,6 +48,11 @@ mongoose.connect(process.env.MONGODB_URL, {
 const accountSid = process.env.TWILIO_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = twilio(accountSid, authToken);
+
+app.get('/', (req, res) => {
+    res.send('Socket.IO server is running.');
+  });
+
 
 // Send OTP to User
 app.post('/sendOtp', async (req, res) => {
